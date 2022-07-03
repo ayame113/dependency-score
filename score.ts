@@ -1,6 +1,5 @@
 import {
   createGraph,
-  Module,
   ModuleGraph,
 } from "https://deno.land/x/deno_graph@0.28.0/mod.ts";
 import { lookup, REGISTRIES } from "https://deno.land/x/udd@0.7.3/registry.ts";
@@ -23,29 +22,43 @@ export async function getDependenciesScores(
   const res: DependenciesScoreResult["data"] = [];
   const graph = await createGraph(rootSpecifier);
   const moduleTree = getExported(graph);
+  const specifierToIgnore: Set<string> = new Set();
   for (const module of graph.modules) {
     if (module.specifier === rootSpecifier) {
+      if (module.dependencies) {
+        // ignore local dependency
+        for (const [key, { code }] of Object.entries(module.dependencies)) {
+          if (!code || !code.specifier) {
+            continue;
+          }
+          if (key.startsWith("https://") || key.startsWith("http://")) {
+            continue;
+          }
+          specifierToIgnore.add(code.specifier);
+        }
+      }
       continue;
     }
     res.push({
       specifier: module.specifier,
       importFrom: moduleTree[module.specifier] ?? [],
-      ...await getScore(module),
+      ...await getScore(module.specifier),
     });
   }
+  const data = res.filter(({ specifier }) => !specifierToIgnore.has(specifier));
   return {
-    score: res.map((r) => r.score).reduce((p, c) => p + c, 0) / res.length,
-    data: res,
+    score: data.map((r) => r.score).reduce((p, c) => p + c, 0) / data.length,
+    data,
   };
 }
 
-async function getScore(module: Module): Promise<{
+async function getScore(specifier: string): Promise<{
   score: number;
   currentVersion: string | null;
   latestVersion: string | null;
   message: string;
 }> {
-  const registry = lookup(module.specifier, REGISTRIES);
+  const registry = lookup(specifier, REGISTRIES);
   if (!registry) {
     return {
       score: 0,
