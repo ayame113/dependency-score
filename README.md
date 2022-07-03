@@ -2,6 +2,8 @@
 
 https://dependency-score.deno.dev/api/dependencies_score?url=https://deno.land/x/oak@v10.6.0/mod.ts
 
+This module is using:
+
 - https://deno.land/x/deno_graph@0.28.0
 - https://deno.land/x/udd@0.7.3
 - https://deno.land/x/semver@v1.4.0
