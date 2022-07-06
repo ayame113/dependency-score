@@ -16,3 +16,7 @@ This module is using:
 graph LR;
     A(input: module specifier)-->B[deno_graph<br><br>get dependency]-->C[deno-udd<br><br>get update]-->D[deno-semver<br><br>conpare version]-->E(output: dependency score);
 ```
+
+![score](https://dependency-score.deno.dev/badge.svg?url=https://raw.githubusercontent.com/ayame113/dependency-score/main/serve.ts)
+
+
