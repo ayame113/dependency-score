@@ -17,6 +17,6 @@ This module is using:
 - https://shields.io/category/other#your-badge
 
 ```mermaid
-graph LR;
+graph TD;
     A(input: module specifier)-->B[deno_graph<br><br>get dependency]-->C[deno-udd<br><br>get update]-->D[deno-semver<br><br>conpare version]-->E[shields.io<br><br>create badge]-->F(output: dependency score);
 ```
