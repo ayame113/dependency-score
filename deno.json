@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "test": "deno test --doc --jobs --shuffle --allow-net",
+    "check": "deno check ./serve.ts"
+  }
+}

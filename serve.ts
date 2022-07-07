@@ -5,37 +5,62 @@ import {
 } from "https://deno.land/std@0.146.0/http/mod.ts";
 import { contentType } from "https://deno.land/std@0.146.0/media_types/mod.ts";
 
-import { getDependenciesScores } from "./score.ts";
-import { svg } from "./svg.ts";
+import { getDependenciesScores, getSVG } from "./mod.ts";
 
+// server implements
+// サーバー（ブラウザからリクエストが来たらレスポンスを返す）
 serve(async (request) => {
-  const { pathname, searchParams } = new URL(request.url);
-  if (pathname === "/api/dependencies_score") {
-    const rootSpecifier = searchParams.get("url");
-    if (!rootSpecifier) {
-      return createResponse(Status.BadRequest);
-    }
-    return Response.json(await getDependenciesScores(rootSpecifier));
+  const url = new URL(request.url);
+  if (url.pathname === "/api/dependencies_score") {
+    return await dependenciesScore(url);
   }
-  if (pathname === "/badge.svg") {
-    const rootSpecifier = searchParams.get("url");
-    if (!rootSpecifier) {
-      return createResponse(Status.BadRequest);
-    }
-    const { score } = await getDependenciesScores(rootSpecifier);
-    const body = await svg(`${Math.round(score * 1000) / 1000}`, "green");
-    return new Response(body, {
-      headers: {
-        "Content-Type": contentType(".svg"),
-      },
-    });
+  if (url.pathname === "/badge.svg") {
+    return await badge(url);
   }
-  return createResponse(Status.NotFound);
+  return notFound();
 });
 
-function createResponse(status: Status) {
-  return new Response(STATUS_TEXT[status], {
-    status: status,
-    statusText: STATUS_TEXT[status],
+/**
+ * Generate and return dependency score data
+ * 依存関係スコアのデータを生成して返す
+ */
+async function dependenciesScore(url: URL) {
+  const rootSpecifier = url.searchParams.get("url");
+  if (!rootSpecifier) {
+    return badRequest();
+  }
+  return Response.json(await getDependenciesScores(rootSpecifier));
+}
+
+/**
+ * Generate and return an image of the badge
+ * バッジの画像を生成して返す
+ */
+async function badge(url: URL) {
+  const rootSpecifier = url.searchParams.get("url");
+  if (!rootSpecifier) {
+    return badRequest();
+  }
+  const body = await getSVG(rootSpecifier);
+  return new Response(body, {
+    headers: {
+      "Content-Type": contentType(".svg"),
+    },
+  });
+}
+
+/** 404 Not Found Response */
+function notFound() {
+  return new Response(STATUS_TEXT[Status.NotFound], {
+    status: Status.NotFound,
+    statusText: STATUS_TEXT[Status.NotFound],
+  });
+}
+
+/** 400 Bad Request Response */
+function badRequest() {
+  return new Response(STATUS_TEXT[Status.BadRequest], {
+    status: Status.BadRequest,
+    statusText: STATUS_TEXT[Status.BadRequest],
   });
 }
