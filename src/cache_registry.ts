@@ -20,7 +20,7 @@ export class CacheRegistry<T> {
   }
 }
 
-export function cache<A extends unknown[], R>(
+export function cache<R>(
   options: { cacheAging: number },
   cb: (arg: string) => R,
 ) {

@@ -70,16 +70,16 @@ function badRequest() {
   });
 }
 
-function validateURL(url: string | null) {
-  if (!url) {
+function validateURL(src: string | null) {
+  if (!src) {
     return null;
   }
   try {
-    const { href, protocol } = new URL(url);
-    if (protocol !== "https:" && protocol !== "http:") {
+    const url = new URL(src);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
       return null;
     }
-    return href;
+    return url.toString();
   } catch {
     return null;
   }
