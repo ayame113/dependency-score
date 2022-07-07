@@ -1,3 +1,4 @@
+import { cache } from "./src/cache_registry.ts";
 import { getExternalModules } from "./src/modules.ts";
 import { getVersionInfo } from "./src/version.ts";
 import { getScore } from "./src/score.ts";
@@ -18,7 +19,7 @@ export interface DependenciesScoreResult {
  * get dependency score
  * 依存関係スコア情報を取得
  */
-export async function getDependenciesScores(
+export const getDependenciesScores = cache({ cacheAging: 600 }, async function (
   rootSpecifier: string,
 ): Promise<DependenciesScoreResult> {
   const result: DependenciesScoreResult["data"] = [];
@@ -38,7 +39,7 @@ export async function getDependenciesScores(
     score: average(result.map((module) => module.score)),
     data: result,
   };
-}
+});
 
 /**
  * create SVG badge

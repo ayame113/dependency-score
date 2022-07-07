@@ -2,8 +2,8 @@ import {
   serve,
   Status,
   STATUS_TEXT,
-} from "https://deno.land/std@0.147.0/http/mod.ts";
-import { contentType } from "https://deno.land/std@0.147.0/media_types/mod.ts";
+} from "https://deno.land/std@0.146.0/http/mod.ts";
+import { contentType } from "https://deno.land/std@0.146.0/media_types/mod.ts";
 
 import { getDependenciesScores, getSVG } from "./mod.ts";
 
@@ -25,7 +25,7 @@ serve(async (request) => {
  * 依存関係スコアのデータを生成して返す
  */
 async function dependenciesScore(url: URL) {
-  const rootSpecifier = url.searchParams.get("url");
+  const rootSpecifier = validateURL(url.searchParams.get("url"));
   if (!rootSpecifier) {
     return badRequest();
   }
@@ -37,7 +37,7 @@ async function dependenciesScore(url: URL) {
  * バッジの画像を生成して返す
  */
 async function badge(url: URL) {
-  const rootSpecifier = url.searchParams.get("url");
+  const rootSpecifier = validateURL(url.searchParams.get("url"));
   if (!rootSpecifier) {
     return badRequest();
   }
@@ -63,4 +63,19 @@ function badRequest() {
     status: Status.BadRequest,
     statusText: STATUS_TEXT[Status.BadRequest],
   });
+}
+
+function validateURL(url: string | null) {
+  if (!url) {
+    return null;
+  }
+  try {
+    const { href, protocol } = new URL(url);
+    if (protocol !== "https:" && protocol !== "http:") {
+      return null;
+    }
+    return href;
+  } catch {
+    return null;
+  }
 }
