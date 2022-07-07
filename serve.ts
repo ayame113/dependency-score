@@ -29,7 +29,11 @@ async function dependenciesScore(url: URL) {
   if (!rootSpecifier) {
     return badRequest();
   }
-  return Response.json(await getDependenciesScores(rootSpecifier));
+  return Response.json(await getDependenciesScores(rootSpecifier), {
+    headers: {
+      "Cache-Control": "public, max-age=604800",
+    },
+  });
 }
 
 /**
@@ -45,6 +49,7 @@ async function badge(url: URL) {
   return new Response(body, {
     headers: {
       "Content-Type": contentType(".svg"),
+      "Cache-Control": "public, max-age=604800",
     },
   });
 }
