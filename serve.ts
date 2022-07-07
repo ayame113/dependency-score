@@ -2,8 +2,8 @@ import {
   serve,
   Status,
   STATUS_TEXT,
-} from "https://deno.land/std@0.147.0/http/mod.ts";
-import { contentType } from "https://deno.land/std@0.147.0/media_types/mod.ts";
+} from "https://deno.land/std@0.146.0/http/mod.ts";
+import { contentType } from "https://deno.land/std@0.146.0/media_types/mod.ts";
 
 import { getDependenciesScores, getSVG } from "./mod.ts";
 
@@ -25,11 +25,15 @@ serve(async (request) => {
  * 依存関係スコアのデータを生成して返す
  */
 async function dependenciesScore(url: URL) {
-  const rootSpecifier = url.searchParams.get("url");
+  const rootSpecifier = validateURL(url.searchParams.get("url"));
   if (!rootSpecifier) {
     return badRequest();
   }
-  return Response.json(await getDependenciesScores(rootSpecifier));
+  return Response.json(await getDependenciesScores(rootSpecifier), {
+    headers: {
+      "Cache-Control": "public, max-age=604800",
+    },
+  });
 }
 
 /**
@@ -37,7 +41,7 @@ async function dependenciesScore(url: URL) {
  * バッジの画像を生成して返す
  */
 async function badge(url: URL) {
-  const rootSpecifier = url.searchParams.get("url");
+  const rootSpecifier = validateURL(url.searchParams.get("url"));
   if (!rootSpecifier) {
     return badRequest();
   }
@@ -45,6 +49,7 @@ async function badge(url: URL) {
   return new Response(body, {
     headers: {
       "Content-Type": contentType(".svg"),
+      "Cache-Control": "public, max-age=604800",
     },
   });
 }
@@ -63,4 +68,19 @@ function badRequest() {
     status: Status.BadRequest,
     statusText: STATUS_TEXT[Status.BadRequest],
   });
+}
+
+function validateURL(src: string | null) {
+  if (!src) {
+    return null;
+  }
+  try {
+    const url = new URL(src);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      return null;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
