@@ -2,8 +2,8 @@ import {
   serve,
   Status,
   STATUS_TEXT,
-} from "https://deno.land/std@0.146.0/http/mod.ts";
-import { contentType } from "https://deno.land/std@0.146.0/media_types/mod.ts";
+} from "https://deno.land/std@0.147.0/http/mod.ts";
+import { contentType } from "https://deno.land/std@0.147.0/media_types/mod.ts";
 
 import { getDependenciesScores, getSVG } from "./mod.ts";
 
