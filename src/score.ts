@@ -1,50 +1,10 @@
-import { getVersionInfo, VersionInfo } from "./version.ts";
-
-export interface DependenciesScoreResult {
-  score: number;
-  data: {
-    specifier: string;
-    importedFrom: string[];
-    score: number;
-    latestVersion: string | null;
-    message: string;
-  }[];
-}
-
-/**
- * Calculate the dependency score for the list of modules
- * モジュールのリストに対して依存関係スコアを計算する
- */
-export async function getScore(
-  modules: { specifier: string; importedFrom: string[] }[],
-) {
-  const result: DependenciesScoreResult["data"] = [];
-
-  for (const { specifier, importedFrom } of modules) {
-    const versions = await getVersionInfo(specifier);
-    result.push({
-      specifier,
-      importedFrom,
-      latestVersion: versions.latestVersion,
-      ...getModuleScore(versions),
-    });
-  }
-
-  return {
-    score: average(result.map((module) => module.score)),
-    data: result,
-  };
-}
-
-function average(data: number[]) {
-  return data.reduce((p, c) => p + c, 0) / data.length;
-}
+import type { VersionInfo } from "./version.ts";
 
 /**
  * Calculate the score from the module version information
  * モジュールのバージョン情報からスコアを計算する
  */
-function getModuleScore({
+export function getScore({
   currentVersion,
   latestVersion,
   currentSemver,
