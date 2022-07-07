@@ -2,12 +2,14 @@
 
 > **Warning**<br> Under construction
 
-this library: [![score](https://dependency-score.deno.dev/badge.svg?url=https://raw.githubusercontent.com/ayame113/dependency-score/main/serve.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://raw.githubusercontent.com/ayame113/dependency-score/main/serve.ts)
+this library:
+[![score](https://dependency-score.deno.dev/badge.svg?url=https://raw.githubusercontent.com/ayame113/dependency-score/main/serve.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://raw.githubusercontent.com/ayame113/dependency-score/main/serve.ts)
 
-oak: [![score](https://dependency-score.deno.dev/badge.svg?url=https://deno.land/x/oak@v10.6.0/mod.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://deno.land/x/oak@v10.6.0/mod.ts)
+oak:
+[![score](https://dependency-score.deno.dev/badge.svg?url=https://deno.land/x/oak@v10.6.0/mod.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://deno.land/x/oak@v10.6.0/mod.ts)
 
-fresh: [![score](https://dependency-score.deno.dev/badge.svg?url=https://deno.land/x/fresh@1.0.1/server.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://deno.land/x/fresh@1.0.1/server.ts)
-
+fresh:
+[![score](https://dependency-score.deno.dev/badge.svg?url=https://deno.land/x/fresh@1.0.1/server.ts)](https://dependency-score.deno.dev/api/dependencies_score?url=https://deno.land/x/fresh@1.0.1/server.ts)
 
 This module is using:
 
