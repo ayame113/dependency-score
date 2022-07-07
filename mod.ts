@@ -1,7 +1,7 @@
 import { getExternalModules } from "./src/modules.ts";
+import { getVersionInfo } from "./src/version.ts";
 import { getScore } from "./src/score.ts";
 import { createBadge } from "./src/badge.ts";
-import { getVersionInfo } from "./src/version.ts";
 
 export interface DependenciesScoreResult {
   score: number;

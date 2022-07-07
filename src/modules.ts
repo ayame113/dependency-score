@@ -1,16 +1,5 @@
 import { createGraph } from "https://deno.land/x/deno_graph@0.28.0/mod.ts";
 
-/**
- * An object whose key is the URL of the module and whose value is the module information.
- * - parents: Module importing this module
- * - children: Module imported by this module
- * - childrenInLocal: Modules imported by this module that are local
- *
- * キーがモジュールのURLで値がモジュール情報のオブジェクト
- * - parents: このモジュールをimportしているモジュール
- * - children: このモジュールがimportしているモジュール
- * - childrenInLocal: このモジュールがimportしているモジュールのうち、ローカルにあるもの
- */
 type ModuleInfo = {
   [specifier: string]: {
     parents: string[];
@@ -30,7 +19,7 @@ export async function getExternalModules(rootSpecifier: string) {
   const localDependency = getLocalDependency(moduleInfo, rootSpecifier);
   return Object.keys(moduleInfo)
     // exclude local file
-    // ローカルファイルは除外
+    // ローカルファイルを除外
     .filter((specifier) => !localDependency.has(specifier))
     .map((specifier) => ({
       specifier,
@@ -41,6 +30,16 @@ export async function getExternalModules(rootSpecifier: string) {
 /**
  * Get module information from dependency graph
  * 依存関係グラフからモジュール情報を取得する
+ *
+ * returns: An object whose key is the URL of the module and whose value is the module information.
+ * - parents: Module importing this module
+ * - children: Module imported by this module
+ * - childrenInLocal: Modules imported by this module that are local
+ *
+ * 返り値: キーがモジュールのURLで値がモジュール情報のオブジェクト
+ * - parents: このモジュールをimportしているモジュール
+ * - children: このモジュールがimportしているモジュール
+ * - childrenInLocal: このモジュールがimportしているモジュールのうち、ローカルにあるもの
  */
 async function getModuleInfo(rootSpecifier: string) {
   const moduleGraph = await createGraph(rootSpecifier);
