@@ -1,9 +1,9 @@
-import * as semver from "https://deno.land/x/semver@v1.4.0/mod.ts";
+import * as semver from "https://deno.land/x/semver@v1.4.1/mod.ts";
 import {
   lookup,
   REGISTRIES,
   RegistryUrl,
-} from "https://deno.land/x/udd@0.7.3/registry.ts";
+} from "https://deno.land/x/udd@0.8.2/registry.ts";
 
 export interface VersionInfo {
   currentVersion: string | null;

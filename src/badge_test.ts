@@ -1,7 +1,7 @@
 import {
   assert,
   assertStringIncludes,
-} from "https://deno.land/std@0.147.0/testing/asserts.ts";
+} from "https://deno.land/std@0.178.0/testing/asserts.ts";
 import { createBadge } from "./badge.ts";
 
 Deno.test({
